@@ -4,11 +4,12 @@ WIDTH=1000
 HEIGHT=590
 
 score = 0
+gameover = False
 enemies = []
 bullets = []
 
 galaga = Actor ("galaga")
-for j in range(8):
+for j in range(7):
     for i in range(8):
         bug = Actor ("bug")
         enemies.append(bug)
@@ -25,9 +26,13 @@ def draw():
     for enemy in enemies:
         enemy.draw()
     screen.draw.text(str(score),(20,20), fontsize=40)
+    if gameover:
+        screen.fill("#060736")
+        screen.draw.text("GAME\nOVER",(175,50), fontsize=300)
+        screen.draw.text("score= " + str(score),(350,500), fontsize=75)
 
 def update():
-    global score
+    global score, gameover
     if keyboard.left:
         galaga.x=galaga.x-2
         if galaga.x <= 50:
@@ -49,6 +54,10 @@ def update():
 
     for enemy in enemies:
         enemy.y += 1
+        if enemy.y > 590:
+            enemies.remove(enemy)
+    if len(enemies) == 0:
+        gameover = True
 
 def on_key_down(key):
     if key == keys.SPACE:
@@ -56,6 +65,5 @@ def on_key_down(key):
         bullets.append(bullet)
         bullets[-1].x = galaga.x-0.1
         bullets[-1].y = galaga.y-40
-        
 
 pgzrun.go()
